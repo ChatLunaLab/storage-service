@@ -4,7 +4,7 @@
 
 _ChatLuna 中转存储服务_
 
-## [![npm](https://img.shields.io/npm/v/koishi-plugin-chatluna-storage-service)](https://www.npmjs.com/package/koishi-plugin-chatluna-storage-service) [![npm](https://img.shields.io/npm/dm/koishi-plugin-chatluna-storage-service)](https://www.npmjs.com/package/koishi-plugin-chatluna-storage-service) ![node version](https://img.shields.io/badge/node-%3E=18-green) ![github top language](https://img.shields.io/github/languages/top/ChatLunaLab/chatluna-character?logo=github)
+## [![npm](https://img.shields.io/npm/v/koishi-plugin-chatluna-storage-service)](https://www.npmjs.com/package/koishi-plugin-chatluna-storage-service) [![npm](https://img.shields.io/npm/dm/koishi-plugin-chatluna-storage-service)](https://www.npmjs.com/package/koishi-plugin-chatluna-storage-service) ![node version](https://img.shields.io/badge/node-%3E=18-green) ![github top language](https://img.shields.io/github/languages/top/ChatLunaLab/chatluna-storage-service?logo=github)
 
 </div>
 
