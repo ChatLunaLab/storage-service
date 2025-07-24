@@ -84,7 +84,8 @@
         "service": {
             "required": [
                 "chatluna",
-                "database"
+                "database",
+                "server"
             ],
             "implements": [
                 "chatluna_storage"

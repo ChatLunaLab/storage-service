@@ -1,6 +1,7 @@
 import { Context } from 'koishi'
 import { Config } from '.'
-// import start\
+// import start
+import { apply as backend } from './plugins/backend'
 // import end
 
 export async function plugins(ctx: Context, parent: Config) {
@@ -8,7 +9,7 @@ export async function plugins(ctx: Context, parent: Config) {
 
     const middlewares: Command[] =
         // middleware start
-        [] // middleware end
+        [backend] // middleware end
 
     for (const middleware of middlewares) {
         await middleware(ctx, parent)
