@@ -1,7 +1,7 @@
 import { Context, Service, Time } from 'koishi'
 import { Config } from '..'
 import { TempFileInfo, TempFileInfoWithData } from '../types'
-import { getImageType, randomFileName, compressImage } from '../utils'
+import { compressImage, getImageType, randomFileName } from '../utils'
 import { join } from 'path'
 import fs from 'fs/promises'
 
