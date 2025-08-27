@@ -5,6 +5,8 @@ export interface TempFileInfo {
     expireTime: number
     id: string
     size: number
+    accessTime: number
+    accessCount: number
 }
 
 export interface TempFileInfoWithData<T> extends TempFileInfo {

@@ -24,6 +24,8 @@ export interface Config {
     backendPath: string
     storagePath: string
     tempCacheTime: number
+    maxStorageSize: number
+    maxStorageCount: number
     imageCompression: number
 }
 
@@ -38,8 +40,16 @@ export const Config: Schema<Config> = Schema.intersect([
             .description('后端服务器路径')
             .default('/chatluna-storage'),
         tempCacheTime: Schema.number()
-            .description('临时数据的缓存时间（小时）')
-            .default(24 * 7)
+            .description('过期数据的缓存时间（小时）')
+            .default(24 * 30),
+        maxStorageSize: Schema.number()
+            .description('最大存储空间（MB）')
+            .default(500)
+            .min(1),
+        maxStorageCount: Schema.number()
+            .description('最大存储文件数')
+            .default(300)
+            .min(1)
     }).description('基础配置'),
     Schema.object({
         imageCompression: Schema.number()
