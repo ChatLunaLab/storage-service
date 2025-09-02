@@ -2,7 +2,6 @@
 /* eslint-disable max-len */
 import { Context, Logger, Schema } from 'koishi'
 
-import { createLogger } from 'koishi-plugin-chatluna/utils/logger'
 import { plugins } from './plugins'
 import { ChatLunaStorageService } from './service/storage'
 
@@ -11,7 +10,7 @@ export let logger: Logger
 export function apply(ctx: Context, config: Config) {
     ctx.on('ready', async () => {
         ctx.plugin(ChatLunaStorageService)
-        logger = createLogger(ctx, 'chatluna-storage-service')
+        logger = ctx.logger('chatluna-storage-service')
         await plugins(ctx, config)
     })
 }

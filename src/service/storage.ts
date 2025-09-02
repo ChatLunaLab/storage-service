@@ -1,5 +1,5 @@
 import { Context, Service, Time } from 'koishi'
-import { Config } from '..'
+import { Config, logger } from '..'
 import { TempFileInfo, TempFileInfoWithData } from '../types'
 import { compressImage, getImageType, randomFileName } from '../utils'
 import { join } from 'path'
@@ -65,8 +65,12 @@ export class ChatLunaStorageService extends Service {
         if (this.lruMap.has(fileId)) {
             this.removeFromLRU(fileId)
         }
-        
-        const newNode: LRUNode = { fileId, prev: this.lruHead, next: this.lruHead.next }
+
+        const newNode: LRUNode = {
+            fileId,
+            prev: this.lruHead,
+            next: this.lruHead.next
+        }
         this.lruHead.next!.prev = newNode
         this.lruHead.next = newNode
         this.lruMap.set(fileId, newNode)
@@ -96,17 +100,21 @@ export class ChatLunaStorageService extends Service {
 
         const sortedFiles = files.sort((a, b) => a.accessTime - b.accessTime)
         let currentSize = totalSize
-        
+
         for (const file of sortedFiles) {
             if (currentSize <= maxSizeBytes * 0.8) break
-            
+
             try {
                 await fs.unlink(file.path)
-                await this.ctx.database.remove('chatluna_storage_temp', { id: file.id })
+                await this.ctx.database.remove('chatluna_storage_temp', {
+                    id: file.id
+                })
                 this.removeFromLRU(file.id)
                 currentSize -= file.size
             } catch (error) {
-                await this.ctx.database.remove('chatluna_storage_temp', { id: file.id })
+                await this.ctx.database.remove('chatluna_storage_temp', {
+                    id: file.id
+                })
                 this.removeFromLRU(file.id)
                 currentSize -= file.size
             }
@@ -115,20 +123,25 @@ export class ChatLunaStorageService extends Service {
 
     private async cleanupByFileCount() {
         const files = await this.ctx.database.get('chatluna_storage_temp', {})
-        
+
         if (files.length <= this.config.maxStorageCount) return
 
         const sortedFiles = files.sort((a, b) => a.accessTime - b.accessTime)
-        const filesToDelete = files.length - Math.floor(this.config.maxStorageCount * 0.8)
-        
+        const filesToDelete =
+            files.length - Math.floor(this.config.maxStorageCount * 0.8)
+
         for (let i = 0; i < filesToDelete; i++) {
             const file = sortedFiles[i]
             try {
                 await fs.unlink(file.path)
-                await this.ctx.database.remove('chatluna_storage_temp', { id: file.id })
+                await this.ctx.database.remove('chatluna_storage_temp', {
+                    id: file.id
+                })
                 this.removeFromLRU(file.id)
             } catch (error) {
-                await this.ctx.database.remove('chatluna_storage_temp', { id: file.id })
+                await this.ctx.database.remove('chatluna_storage_temp', {
+                    id: file.id
+                })
                 this.removeFromLRU(file.id)
             }
         }
@@ -173,7 +186,9 @@ export class ChatLunaStorageService extends Service {
             }
 
             if (success.length > 0) {
-                console.log(`Auto deleted ${success.length} expired temp files`)
+                logger.success(
+                    `Auto deleted ${success.length} expired temp files`
+                )
             }
         }
 
@@ -220,7 +235,9 @@ export class ChatLunaStorageService extends Service {
         })
         await fs.writeFile(filePath, processedBuffer)
 
-        const expireTime = Date.now() + (expireHours || this.config.tempCacheTime) * 60 * 60 * 1000
+        const expireTime =
+            Date.now() +
+            (expireHours || this.config.tempCacheTime) * 60 * 60 * 1000
         const currentTime = Date.now()
         const fileInfo: TempFileInfo = {
             id: randomName.split('.')[0],
@@ -255,13 +272,17 @@ export class ChatLunaStorageService extends Service {
         }
 
         const file = fileInfo[0]
-        
+
         const currentTime = Date.now()
-        await this.ctx.database.set('chatluna_storage_temp', { id }, {
-            accessTime: currentTime,
-            accessCount: file.accessCount + 1
-        })
-        
+        await this.ctx.database.set(
+            'chatluna_storage_temp',
+            { id },
+            {
+                accessTime: currentTime,
+                accessCount: file.accessCount + 1
+            }
+        )
+
         this.addToLRU(id)
 
         try {
