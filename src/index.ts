@@ -5,6 +5,7 @@ import { Context, Logger, Schema } from 'koishi'
 import { plugins } from './plugins'
 import { ChatLunaStorageService } from './service/storage'
 
+export * from './service/storage'
 export let logger: Logger
 
 export function apply(ctx: Context, config: Config) {
