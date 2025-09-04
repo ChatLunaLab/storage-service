@@ -226,13 +226,14 @@ export class ChatLunaStorageService extends Service {
         const processedBuffer = buffer
 
         let randomName = randomFileName(filename)
-        const filePath = join(this.config.storagePath, 'temp', randomName)
 
         if (fileType != null) {
             // reset randomName typpe
             randomName =
                 randomName.split('.')?.[0] ?? randomName + '.' + fileType
         }
+
+        const filePath = join(this.config.storagePath, 'temp', randomName)
 
         await fs.mkdir(join(this.config.storagePath, 'temp'), {
             recursive: true
