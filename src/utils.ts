@@ -27,7 +27,7 @@ export function randomFileName(fileName: string): string {
         ? '.' + fileName.split('.').pop()
         : ''
     const timestamp = Date.now()
-    const randomBytes = Math.random().toString(36).substring(2, 15)
+
     const additionalRandom = Math.random().toString(36).substring(2, 10)
-    return `${timestamp}_${randomBytes}_${additionalRandom}${extension}`
+    return `${timestamp}_${additionalRandom}${extension}`
 }

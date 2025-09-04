@@ -251,7 +251,7 @@ export class ChatLunaStorageService extends Service {
         return {
             ...fileInfo,
             data: processedBuffer,
-            url: `${this.ctx.server.config.selfUrl}/${this.config.backendPath}/temp/${randomName}`
+            url: `${this.ctx.server.config.selfUrl}${this.config.backendPath}/temp/${randomName}`
         }
     }
 

@@ -8,6 +8,8 @@ import { ChatLunaStorageService } from './service/storage'
 export * from './service/storage'
 export let logger: Logger
 
+export const usage = `使用此插件需要确保你 Koishi 运行在公网，或你的聊天适配器（如 onebot，telegram）和 koishi 运行在同一个局域网中。`
+
 export function apply(ctx: Context, config: Config) {
     ctx.on('ready', async () => {
         ctx.plugin(ChatLunaStorageService, config)

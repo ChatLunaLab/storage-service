@@ -8,7 +8,7 @@ export function apply(ctx: Context, config: Config) {
         return
     }
 
-    ctx.inject(['server'], (ctx) => {
+    ctx.inject(['server', 'chatluna_storage'], (ctx) => {
         ctx.server.get(`${config.backendPath}/temp/:id`, async (koa) => {
             const { id } = koa.params
 
