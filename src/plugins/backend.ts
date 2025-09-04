@@ -29,7 +29,7 @@ export function apply(ctx: Context, config: Config) {
                     'Content-Disposition',
                     `inline; filename="${fileInfo.name}"`
                 )
-                koa.body = fileInfo.data
+                koa.body = await fileInfo.data
             } catch (error) {
                 logger.error('Error serving temp file:', error)
                 koa.status = 500
