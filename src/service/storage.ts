@@ -16,6 +16,8 @@ export class ChatLunaStorageService extends Service {
     private lruTail: LRUNode
     private lruMap: Map<string, LRUNode>
 
+    private backendPath: string
+
     constructor(
         ctx: Context,
         public config: Config
@@ -27,6 +29,8 @@ export class ChatLunaStorageService extends Service {
         this.lruHead.next = this.lruTail
         this.lruTail.prev = this.lruHead
         this.lruMap = new Map()
+
+        this.backendPath = this.config.backendPath
 
         ctx.database.extend(
             'chatluna_storage_temp',
@@ -51,6 +55,10 @@ export class ChatLunaStorageService extends Service {
 
         this.setupAutoDelete()
         this.initializeLRU()
+
+        ctx.inject(['server'], (ctx) => { 
+            this.backendPath = ctx.server.config.selfUrl + this.config.backendPath
+        })
     }
 
     private async initializeLRU() {
@@ -251,7 +259,7 @@ export class ChatLunaStorageService extends Service {
         return {
             ...fileInfo,
             data: processedBuffer,
-            url: `${this.ctx.server.config.selfUrl}${this.config.backendPath}/temp/${randomName}`
+            url: `${this.backendPath}/temp/${randomName}`
         }
     }
 
@@ -287,7 +295,7 @@ export class ChatLunaStorageService extends Service {
                 accessTime: currentTime,
                 accessCount: file.accessCount + 1,
                 data,
-                url: `${this.config.backendPath}/temp/${file.name}`
+                url: `${this.backendPath}/temp/${file.name}`
             }
         } catch (error) {
             await this.ctx.database.remove('chatluna_storage_temp', { id })
