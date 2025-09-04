@@ -26,7 +26,6 @@ export interface Config {
     tempCacheTime: number
     maxStorageSize: number
     maxStorageCount: number
-    imageCompression: number
 }
 
 export const Config: Schema<Config> = Schema.intersect([
@@ -50,14 +49,7 @@ export const Config: Schema<Config> = Schema.intersect([
             .description('最大存储文件数')
             .default(300)
             .min(1)
-    }).description('基础配置'),
-    Schema.object({
-        imageCompression: Schema.number()
-            .description('图片压缩的百分比，超过 80 以后将不会压缩图片')
-            .default(80)
-            .min(10)
-            .max(100)
-    }).description('附加配置')
+    }).description('基础配置')
 ])
 
 export const name = 'chatluna-storage-service'

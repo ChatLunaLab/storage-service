@@ -41,7 +41,7 @@
   },
   "homepage": "https://github.com/ChatLunaLab/storage-service#readme",
   "dependencies": {
-    "@mxsir/image-tiny": "^0.1.0"
+   
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^7.18.1-alpha.3",

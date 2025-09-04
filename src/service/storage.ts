@@ -1,7 +1,7 @@
 import { Context, Service, Time } from 'koishi'
 import { Config, logger } from '..'
 import { TempFileInfo, TempFileInfoWithData } from '../types'
-import { compressImage, getImageType, randomFileName } from '../utils'
+import { getImageType, randomFileName } from '../utils'
 import { join } from 'path'
 import fs from 'fs/promises'
 
@@ -213,16 +213,7 @@ export class ChatLunaStorageService extends Service {
         expireHours?: number
     ): Promise<TempFileInfoWithData<Buffer>> {
         const isImage = getImageType(buffer, false, true) !== 'unknown'
-        let processedBuffer = buffer
-
-        if (isImage && this.config.imageCompression < 80) {
-            const compressedImageBuffer = await compressImage(
-                buffer,
-                filename,
-                this.config.imageCompression
-            )
-            processedBuffer = Buffer.from(compressedImageBuffer)
-        }
+        const processedBuffer = buffer
 
         const randomName = randomFileName(filename)
         const filePath = join(this.config.storagePath, 'temp', randomName)

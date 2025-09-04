@@ -1,25 +1,3 @@
-import imageTiny from '@mxsir/image-tiny'
-
-export async function compressImage(
-    buffer: Buffer,
-    filename: string,
-    quality: number
-) {
-    const image = bufferToFile(buffer, filename)
-    const compressedImage: File = await imageTiny(image, quality)
-
-    return await compressedImage.arrayBuffer()
-}
-
-function bufferToFile(buffer: Buffer, filename: string): File {
-    const imageType = getImageType(buffer)
-    const fileNameWithoutExtension = filename.split('.')[0]
-    filename = fileNameWithoutExtension + '.' + imageType
-    return new File([buffer as Buffer<ArrayBuffer>], filename, {
-        type: imageType
-    })
-}
-
 export function getImageType(
     buffer: Buffer,
     pure: boolean = false,
