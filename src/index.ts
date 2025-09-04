@@ -10,7 +10,7 @@ export let logger: Logger
 
 export function apply(ctx: Context, config: Config) {
     ctx.on('ready', async () => {
-        ctx.plugin(ChatLunaStorageService)
+        ctx.plugin(ChatLunaStorageService, config)
         logger = ctx.logger('chatluna-storage-service')
         await plugins(ctx, config)
     })

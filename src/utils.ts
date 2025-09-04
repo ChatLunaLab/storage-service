@@ -1,7 +1,7 @@
 export function getImageType(
     buffer: Buffer,
     pure: boolean = false,
-    checkIsImage: boolean = false
+    checkIsImage: boolean = true
 ): string {
     const first10Bytes = new Uint8Array(buffer).slice(0, 10)
     const type = Buffer.from(first10Bytes).toString('base64', 0, 10)
@@ -16,7 +16,7 @@ export function getImageType(
     }
 
     if (checkIsImage) {
-        return 'unknown'
+        return undefined
     }
 
     return pure ? 'jpg' : 'image/jpeg'

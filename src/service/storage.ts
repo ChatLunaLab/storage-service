@@ -212,14 +212,18 @@ export class ChatLunaStorageService extends Service {
         filename: string,
         expireHours?: number
     ): Promise<TempFileInfoWithData<Buffer>> {
-        const isImage = getImageType(buffer, false, true) !== 'unknown'
+        const fileType = getImageType(buffer, false, false)
+
         const processedBuffer = buffer
 
-        const randomName = randomFileName(filename)
+        let randomName = randomFileName(filename)
         const filePath = join(this.config.storagePath, 'temp', randomName)
-        const fileType = isImage
-            ? getImageType(buffer, false, false)
-            : undefined
+
+        if (fileType != null) {
+            // reset randomName typpe
+            randomName =
+                randomName.split('.')?.[0] ?? randomName + '.' + fileType
+        }
 
         await fs.mkdir(join(this.config.storagePath, 'temp'), {
             recursive: true
@@ -247,7 +251,7 @@ export class ChatLunaStorageService extends Service {
         return {
             ...fileInfo,
             data: processedBuffer,
-            url: `${this.config.backendPath}/temp/${randomName}`
+            url: `${this.ctx.server.config.selfUrl}/${this.config.backendPath}/temp/${randomName}`
         }
     }
 
