@@ -57,7 +57,7 @@ export class ChatLunaStorageService extends Service {
         this.initializeLRU()
 
         ctx.inject(['server'], (ctx) => {
-            const backendPath = `${ctx.server.config.selfUrl}${this.config.backendPath}`
+            const backendPath = `${ctx.server.selfUrl}${this.config.backendPath}`
             this.backendPath = backendPath
         })
     }
@@ -221,7 +221,7 @@ export class ChatLunaStorageService extends Service {
         filename: string,
         expireHours?: number
     ): Promise<TempFileInfoWithData<Buffer>> {
-        const fileType = getImageType(buffer, false, false)
+        const fileType = getImageType(buffer, true, true)
 
         const processedBuffer = buffer
 
@@ -247,7 +247,7 @@ export class ChatLunaStorageService extends Service {
         const fileInfo: TempFileInfo = {
             id: randomName.split('.')[0],
             path: filePath,
-            name: filename,
+            name: randomName,
             type: fileType,
             expireTime,
             size: processedBuffer.length,
@@ -260,7 +260,7 @@ export class ChatLunaStorageService extends Service {
 
         return {
             ...fileInfo,
-            data: processedBuffer,
+            data: Promise.resolve(processedBuffer),
             url: `${this.backendPath}/temp/${randomName}`
         }
     }
@@ -268,20 +268,24 @@ export class ChatLunaStorageService extends Service {
     async getTempFile(
         id: string
     ): Promise<TempFileInfoWithData<Buffer> | null> {
-        const fileInfo = await this.ctx.database.get('chatluna_storage_temp', {
+        let fileInfo = await this.ctx.database.get('chatluna_storage_temp', {
             id
         })
 
         if (fileInfo.length === 0) {
-            return null
+            fileInfo = await this.ctx.database.get('chatluna_storage_temp', {
+                name: id
+            })
         }
+
+        if (fileInfo.length === 0) return null
 
         const file = fileInfo[0]
 
         const currentTime = Date.now()
         await this.ctx.database.set(
             'chatluna_storage_temp',
-            { id },
+            { id: file.id },
             {
                 accessTime: currentTime,
                 accessCount: file.accessCount + 1
@@ -291,12 +295,11 @@ export class ChatLunaStorageService extends Service {
         this.addToLRU(id)
 
         try {
-            const data = await fs.readFile(file.path)
             return {
                 ...file,
                 accessTime: currentTime,
                 accessCount: file.accessCount + 1,
-                data,
+                data: fs.readFile(file.path),
                 url: `${this.backendPath}/temp/${file.name}`
             }
         } catch (error) {

@@ -10,6 +10,6 @@ export interface TempFileInfo {
 }
 
 export interface TempFileInfoWithData<T> extends TempFileInfo {
-    data: T
+    data: Promise<T>
     url: string
 }
