@@ -25,6 +25,7 @@ export const inject = {
 export interface Config {
     backendPath: string
     storagePath: string
+    serverPath: string
     tempCacheTime: number
     maxStorageSize: number
     maxStorageCount: number
@@ -37,6 +38,9 @@ export const Config: Schema<Config> = Schema.intersect([
         })
             .description('缓存存储路径')
             .default('./data/chatluna-storage'),
+        serverPath: Schema.string()
+            .description('Koishi 在公网或者局域网中的路径')
+            .default('http://127.0.0.1:5140'),
         backendPath: Schema.string()
             .description('后端服务器路径')
             .default('/chatluna-storage'),

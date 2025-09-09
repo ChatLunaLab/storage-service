@@ -57,7 +57,7 @@ export class ChatLunaStorageService extends Service {
         this.initializeLRU()
 
         ctx.inject(['server'], (ctx) => {
-            const backendPath = `${ctx.server.selfUrl}${this.config.backendPath}`
+            const backendPath = `${config.serverPath ?? ctx.server.selfUrl}${this.config.backendPath}`
             this.backendPath = backendPath
         })
     }
